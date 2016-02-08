@@ -3,20 +3,22 @@ package com.morsebyte.shailesh.twostagerating;
 /**
  * Created by GuestHouser on 2/5/16.
  */
-public class Model {
+public class AppRateDataModel {
     String ratePromptTitle = "Rate Us";
-    String ratePromptText = "How would you rate our application?";
+    String ratePromptText = "How would you rate our app?";
     String ratePromptLaterText= "Remind me later";
     String ratePromptNeverText = "Never show again";
     String confirmRateTitle = "Thank you!";
     String confirmRateText = "Would you like to post your review on app store. This will help and motivate us a lot.";
-    String confirmRateNegativeText = "No";
+    String confirmRateNegativeText = "No Thanks!";
     String confirmRatePositiveText = "Sure";
     String feedbackPromptTitle = "We're Really Sorry";
     String feedbackPromptText = "Could you tell us what problem you faced. This will help us improve.";
-    String feedbackPromptPositiveText = "Send";
+    String feedbackPromptPositiveText = "Submit";
     String feedbackPromptNegativeText = "No Thanks!";
     TwoStageRate.StoreType storeType = TwoStageRate.StoreType.GOOGLEPLAY;
+
+
 
     public void setRatePromptTitle(String ratePromptTitle)
     {

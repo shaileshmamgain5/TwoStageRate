@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="rate_prompt_button_text_color">#274f96</color>
+    <color name="dialog_title_text_color">#535559</color>
+    <color name="dialog_subtext_text_color">#959699</color>
+</resources>

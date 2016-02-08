@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/tvConfirmRateTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_large"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        android:textColor="@color/dialog_title_text_color"
+        />
+    <TextView
+        android:id="@+id/tvConfirmRateText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_medium"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/dialog_subtext_text_color"
+        />
+    <LinearLayout
+        android:id="@+id/llButtonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible">
+        <TextView
+            android:id="@+id/tvConfirmDeny"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@color/rate_prompt_button_text_color"
+            android:textSize="@dimen/text_size_medium"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            />
+
+        <TextView
+            android:id="@+id/tvConfirmSubmit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@color/rate_prompt_button_text_color"
+            android:textSize="@dimen/text_size_medium"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            />
+    </LinearLayout>
+
+</LinearLayout>
