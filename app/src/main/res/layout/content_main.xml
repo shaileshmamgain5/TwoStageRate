@@ -12,9 +12,9 @@
     tools:context="com.morsebyte.shailesh.samplerateapplication.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
+    <com.morsebyte.shailesh.samplerateapplication.CustomTextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="Hello World!"
         android:id="@+id/textView" />
 

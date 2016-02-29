@@ -66,6 +66,13 @@ public class Utils {
 
         return value;
     }
+    public static long getLongSystemValue(String key, Context p_context) {
+        long value = -1;
+        SharedPreferences myPrefs = p_context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        value = myPrefs.getLong(key, -1);
+
+        return value;
+    }
 
     public static boolean getBooleanSystemValue(String key, Context p_context) {
         boolean value = false;
