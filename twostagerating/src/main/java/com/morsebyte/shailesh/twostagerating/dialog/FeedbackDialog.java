@@ -17,46 +17,45 @@ import com.morsebyte.shailesh.twostagerating.R;
  */
 public class FeedbackDialog {
 
-    public Dialog getFeedbackDialog(final Context context, AppRateDataModel appRateData)
+    String feedbackPromptTitle = "We're Really Sorry";
+    String feedbackPromptText = "Could you tell us what problem you faced. This will help us improve.";
+    String feedbackPromptPositiveText = "Submit";
+    String feedbackPromptNegativeText = "No Thanks!";
+
+    public void setTitle(String feedbackPromptTitle)
     {
-        // custom dialog
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_feedback);
-
-        // set the custom dialog components - text, image and button
-        TextView title = (TextView) dialog.findViewById(R.id.tvFeedbackTitle);
-        title.setText(appRateData.getFeedbackPromptTitle());
-        TextView text = (TextView) dialog.findViewById(R.id.tvFeedbackText);
-        text.setText(appRateData.getFeedbackPromptText());
-        TextView deny = (TextView) dialog.findViewById(R.id.tvFeedbackDeny);
-        deny.setText(appRateData.getFeedbackPromptNegativeText());
-        final EditText etFeedback = (EditText)dialog.findViewById(R.id.etFeedback);
-        TextView submit = (TextView) dialog.findViewById(R.id.tvFeedbackSubmit);
-        submit.setText(appRateData.getFeedbackPromptPositiveText());
-        deny.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //ToDo : emit something here
-                dialog.dismiss();
-            }
-
-        });
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(etFeedback.getText()!=null && etFeedback.getText().length()>0)
-                {
-                    //// TODO: 2/8/16 : Write a callback with the text in it 
-                   dialog.dismiss(); 
-                }else
-                {
-                    Toast.makeText(context, "Bro.. Write Something", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-
-        return  dialog;
+        this.feedbackPromptTitle =feedbackPromptTitle;
     }
+    public String getTitle( )
+    {
+        return this.feedbackPromptTitle;
+    }
+    public void setDescription(String feedbackPromptText)
+    {
+        this.feedbackPromptText =feedbackPromptText;
+    }
+    public String getDescription( )
+    {
+        return this.feedbackPromptText;
+    }
+
+    public void setPositiveText(String feedbackPromptPositiveText)
+    {
+        this.feedbackPromptPositiveText =feedbackPromptPositiveText;
+    }
+    public String getPositiveText( )
+    {
+        return this.feedbackPromptPositiveText;
+    }
+
+    public void setNegativeText(String feedbackPromptNegativeText)
+    {
+        this.feedbackPromptNegativeText =feedbackPromptNegativeText;
+    }
+    public String getNegativeText( )
+    {
+        return this.feedbackPromptNegativeText;
+    }
+
+
 }

@@ -19,44 +19,42 @@ import com.morsebyte.shailesh.twostagerating.TwoStageRate;
  */
 public class ConfirmRateDialog {
 
-    public Dialog getConfirmRateDialog(final Context context, final AppRateDataModel appRateData)
+    String confirmRateTitle = "Thank you!";
+    String confirmRateText = "Would you like to post your review on app store. This will help and motivate us a lot.";
+    String confirmRateNegativeText = "No Thanks!";
+    String confirmRatePositiveText = "Sure";
+
+    public void setTitle(String confirmRateTitle)
     {
-        // custom dialog
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_confirm_rate);
+        this.confirmRateTitle =confirmRateTitle;
+    }
+    public String getTitle( )
+    {
+        return this.confirmRateTitle;
+    }
 
-        // set the custom dialog components - text, image and button
-        TextView title = (TextView) dialog.findViewById(R.id.tvConfirmRateTitle);
-        title.setText(appRateData.getConfirmRateTitle());
-        TextView text = (TextView) dialog.findViewById(R.id.tvConfirmRateText);
-        text.setText(appRateData.getConfirmRateText());
-        TextView deny = (TextView) dialog.findViewById(R.id.tvConfirmDeny);
-        deny.setText(appRateData.getConfirmRateNegativeText());
-        TextView submit = (TextView) dialog.findViewById(R.id.tvConfirmSubmit);
-        submit.setText(appRateData.getConfirmRatePositiveText());
-        deny.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //ToDo : emit something here
-                dialog.dismiss();
-            }
-
-        });
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                    //// TODO: 2/8/16 : Write a callback
-                final Intent intentToAppstore = appRateData.getStoreType() == TwoStageRate.StoreType.GOOGLEPLAY ?
-                        IntentHelper.createIntentForGooglePlay(context) : IntentHelper.createIntentForAmazonAppstore(context);
-                context.startActivity(intentToAppstore);
-                dialog.dismiss();
-
-            }
-        });
-
-
-        return  dialog;
+    public void setDescription(String confirmRateText)
+    {
+        this.confirmRateText =confirmRateText;
+    }
+    public String getDescription( )
+    {
+        return this.confirmRateText;
+    }
+    public void setNegativeText(String confirmRateNegativeText)
+    {
+        this.confirmRateNegativeText =confirmRateNegativeText;
+    }
+    public String getNegativeText( )
+    {
+        return this.confirmRateNegativeText;
+    }
+    public void setPositiveText(String confirmRatePositiveText)
+    {
+        this.confirmRatePositiveText =confirmRatePositiveText;
+    }
+    public String getPositiveText( )
+    {
+        return this.confirmRatePositiveText;
     }
 }

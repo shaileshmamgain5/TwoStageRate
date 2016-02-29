@@ -16,46 +16,45 @@ import com.morsebyte.shailesh.twostagerating.R;
  */
 public class RatePromptDialog {
 
+    String ratePromptTitle = "Rate Us";
+    String ratePromptText = "How would you rate our app?";
+    String ratePromptLaterText= "Remind me later";
+    String ratePromptNeverText = "Never show again";
 
-    public Dialog getRatePromptDialog(final Context context, final AppRateDataModel appRateData, final float threshold)
+    public void setTitle(String ratePromptTitle)
     {
-        // custom dialog
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_rate_initial);
+        this.ratePromptTitle =ratePromptTitle;
+    }
+    public String getTitle( )
+    {
+        return this.ratePromptTitle;
+    }
 
-        // set the custom dialog components - text, image and button
-        TextView title = (TextView) dialog.findViewById(R.id.tvRatePromptTitle);
-        title.setText(appRateData.getRatePromptTitle());
-        TextView text = (TextView) dialog.findViewById(R.id.tvRatePromptText);
-        text.setText(appRateData.getRatePromptText());
-        RatingBar rbRating = (RatingBar) dialog.findViewById(R.id.rbRatePromptBar);
+    public void setDescription(String ratePromptText)
+    {
+        this.ratePromptText =ratePromptText;
+    }
+    public String getDescription( )
+    {
+        return this.ratePromptText;
+    }
 
-        rbRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                if(rating>threshold)
-                {
-                    ConfirmRateDialog cr = new ConfirmRateDialog();
-                    Dialog dialog1 = cr.getConfirmRateDialog(context, appRateData);
-                    if(dialog1!=null)
-                    {
-                        dialog1.show();
-                    }
+    public void setLaterText(String ratePromptLaterText)
+    {
+        this.ratePromptLaterText =ratePromptLaterText;
+    }
+    public String getLaterText( )
+    {
+        return this.ratePromptLaterText;
+    }
 
-                }else
-                {
-                    FeedbackDialog fd = new FeedbackDialog();
-                    Dialog dialog1 = fd.getFeedbackDialog(context, appRateData);
-                    if(dialog1!=null)
-                    {
-                        dialog1.show();
-                    }
-                }
-                dialog.dismiss();
-            }
-        });
-        return  dialog;
+    public void setNeverText(String ratePromptNeverText)
+    {
+        this.ratePromptNeverText =ratePromptNeverText;
+    }
+    public String getNeverText( )
+    {
+        return this.ratePromptNeverText;
     }
 
 }
