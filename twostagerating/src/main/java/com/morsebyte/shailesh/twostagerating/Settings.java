@@ -8,7 +8,7 @@ public class Settings {
 
     private int installDays = 5;
 
-    private int eventsTimes = -1;
+    private int eventsTimes = 10;
 
     float thresholdRating=3;
 

@@ -14,6 +14,7 @@ import com.morsebyte.shailesh.twostagerating.dialog.ConfirmRateDialog;
 import com.morsebyte.shailesh.twostagerating.dialog.FeedbackDialog;
 import com.morsebyte.shailesh.twostagerating.dialog.RatePromptDialog;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -23,8 +24,11 @@ public class TwoStageRate {
 
     private static final String LAUNCH_COUNT = "LAUNCHCOUNT";
     private static final String INSTALL_DAYS = "INSTALLDAYS";
-    private static final String REMIND_DAYS = "REMINDDAYS";
+    private static final String INSTALL_DATE = "INSTALLDATE";
+    private static final String EVENT_COUNT = "EVENTCOUNT";
+    private static final String STOP_TRACK  = "STOPTRACK";
 
+    boolean isDebug = false;
 
 
     public static AppRateDataModel appRateData = new AppRateDataModel();
@@ -32,7 +36,6 @@ public class TwoStageRate {
     public static FeedbackDialog feedbackDialog = new FeedbackDialog();
     public static ConfirmRateDialog confirmRateDialog = new ConfirmRateDialog();
     public static Settings settings = new Settings();
-
 
 
     private Date installDate = new Date();
@@ -58,12 +61,23 @@ public class TwoStageRate {
         return singleton;
     }
 
-    public void showIfMeetsConditions()
-    {
-        if(checkIfMeetsCondition()){
-            showRatePromptDialog();
+    /**
+     * Checks if the conditions are met (anu one ) and shows prompt if yes.
+     * But before it checks whether it has already shown the prompt and user has responded
+     *
+     * Also it always shows up in Debug mode
+     */
+    public void showIfMeetsConditions() {
 
-        }else{track();}
+        if(!Utils.getBooleanSystemValue(STOP_TRACK,mContext)){
+        if (checkIfMeetsCondition() || isDebug) {
+            showRatePromptDialog();
+            Utils.setBooleanSystemValue(STOP_TRACK, true, mContext);
+
+        } else {
+            track();
+        }
+    }
     }
 
     private void track() {
@@ -71,43 +85,92 @@ public class TwoStageRate {
     }
 
     private boolean checkIfMeetsCondition() {
-            //return getIsAgreeShowDialog(context) &&
-                   // isOverLaunchTimes() &&
-                    //isOverInstallDate() &&
-                   // isOverRemindDate();
+        return isOverLaunchTimes() &&
+        isOverInstallDays() && isOverEventCounts();
 
-        return false;
     }
 
-    public void showRatePromptDialog()
-    {
+    public void showRatePromptDialog() {
         Dialog dialog = getRatePromptDialog(mContext, ratePromptDialog, settings.getThresholdRating());
-        if(dialog!=null)
-        {
+        if (dialog != null) {
             dialog.show();
         }
 
     }
 
-    public void setInstallDate(int date)
-    {
+    public void setInstallDate() {
 
+        if (Utils.getLongSystemValue(INSTALL_DATE, mContext) == 0) {
+            //getting the current time in milliseconds, and creating a Date object from it:
+            Date date = new Date(System.currentTimeMillis()); //or simply new Date();
+            long millis = date.getTime();
+            Utils.setLongSystemValue(INSTALL_DATE, millis, mContext);
+        }
     }
+
     private boolean isOverLaunchTimes() {
-        return Utils.getIntSystemValue(LAUNCH_COUNT, mContext) >= settings.getLaunchTimes();
+        if (Utils.getIntSystemValue(LAUNCH_COUNT, mContext) >= settings.getLaunchTimes()) {
+            return true;
+        } else {
+            int count = Utils.getIntSystemValue(LAUNCH_COUNT, mContext) + 1;
+            Utils.setIntSystemValue(LAUNCH_COUNT, count, mContext);
+            return false;
+        }
+
     }
 
-    //private boolean isOverInstallDate() {
-        //return isOverDate(getInstallDate(context), installDate);
-    //}
+    private boolean isOverInstallDays() {
+        if (Utils.getLongSystemValue(INSTALL_DATE, mContext) == 0) {
+            setInstallDate();
+            return false;
+        } else {
+            Date installDate = new Date(Utils.getLongSystemValue(INSTALL_DATE, mContext));
+            Date currentDate = new Date(System.currentTimeMillis());
+            long days = Utils.daysBetween(installDate, currentDate);
+            if (days >= settings.getInstallDays()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 
-    private boolean isOverRemindDate() {
-        return  true ;
-       // return isOverDate(getRemindInterval(context), remindInterval);
     }
 
-    public Dialog getRatePromptDialog(final Context context, final RatePromptDialog ratePromptDialog, final float threshold)
-    {
+    private boolean isOverEventCounts() {
+        if (Utils.getIntSystemValue(EVENT_COUNT, mContext) >= settings.getEventsTimes()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void incrementEvent() {
+        int eventCount = Utils.getIntSystemValue(EVENT_COUNT, mContext) +1;
+        Utils.setIntSystemValue(EVENT_COUNT,eventCount,mContext);
+        showIfMeetsConditions();
+    }
+
+    public void isDebug(Boolean isDeb) {
+        isDebug = isDeb;
+    }
+
+    /**
+     * It would be called when user says remind me later.
+     */
+    private void resetTwoStage() {
+        //set current date
+        //getting the current time in milliseconds, and creating a Date object from it:
+        Date date = new Date(System.currentTimeMillis()); //or simply new Date();
+        long millis = date.getTime();
+        Utils.setLongSystemValue(INSTALL_DATE, millis, mContext);
+        Utils.setIntSystemValue(INSTALL_DAYS, 0, mContext);
+        Utils.setIntSystemValue(EVENT_COUNT, 0, mContext);
+
+        Utils.setBooleanSystemValue(STOP_TRACK, false, mContext);
+
+    }
+
+    public Dialog getRatePromptDialog(final Context context, final RatePromptDialog ratePromptDialog, final float threshold) {
         // custom dialog
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -123,32 +186,27 @@ public class TwoStageRate {
         rbRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                if(rating>threshold)
-                {
+                if (rating > threshold) {
                     ConfirmRateDialog cr = new ConfirmRateDialog();
                     Dialog dialog1 = getConfirmRateDialog(context, confirmRateDialog);
-                    if(dialog1!=null)
-                    {
+                    if (dialog1 != null) {
                         dialog1.show();
                     }
 
-                }else
-                {
+                } else {
                     FeedbackDialog fd = new FeedbackDialog();
                     Dialog dialog1 = getFeedbackDialog(context, feedbackDialog);
-                    if(dialog1!=null)
-                    {
+                    if (dialog1 != null) {
                         dialog1.show();
                     }
                 }
                 dialog.dismiss();
             }
         });
-        return  dialog;
+        return dialog;
     }
 
-    public Dialog getConfirmRateDialog(final Context context, final ConfirmRateDialog confirmRateDialog)
-    {
+    public Dialog getConfirmRateDialog(final Context context, final ConfirmRateDialog confirmRateDialog) {
         // custom dialog
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -185,12 +243,11 @@ public class TwoStageRate {
         });
 
 
-        return  dialog;
+        return dialog;
     }
 
 
-    public Dialog getFeedbackDialog(final Context context, FeedbackDialog feedbackDialog)
-    {
+    public Dialog getFeedbackDialog(final Context context, FeedbackDialog feedbackDialog) {
         // custom dialog
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -203,7 +260,7 @@ public class TwoStageRate {
         text.setText(feedbackDialog.getDescription());
         TextView deny = (TextView) dialog.findViewById(R.id.tvFeedbackDeny);
         deny.setText(feedbackDialog.getNegativeText());
-        final EditText etFeedback = (EditText)dialog.findViewById(R.id.etFeedback);
+        final EditText etFeedback = (EditText) dialog.findViewById(R.id.etFeedback);
         TextView submit = (TextView) dialog.findViewById(R.id.tvFeedbackSubmit);
         submit.setText(feedbackDialog.getPositiveText());
         deny.setOnClickListener(new View.OnClickListener() {
@@ -217,19 +274,17 @@ public class TwoStageRate {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(etFeedback.getText()!=null && etFeedback.getText().length()>0)
-                {
+                if (etFeedback.getText() != null && etFeedback.getText().length() > 0) {
                     //// TODO: 2/8/16 : Write a callback with the text in it
                     dialog.dismiss();
-                }else
-                {
+                } else {
                     Toast.makeText(context, "Bro.. Write Something", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
 
-        return  dialog;
+        return dialog;
     }
 
 
