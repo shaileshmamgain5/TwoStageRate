@@ -29,7 +29,7 @@ public class TwoStageRate {
 
     public static AppRateDataModel appRateData = new AppRateDataModel();
     public static RatePromptDialog ratePromptDialog = new RatePromptDialog();
-    public static FeedbackDialog feedbackDialog = new FeedbackDialog();
+    public FeedbackDialog feedbackDialog = new FeedbackDialog();
     public static ConfirmRateDialog confirmRateDialog = new ConfirmRateDialog();
     public static Settings settings = new Settings();
 
@@ -189,7 +189,7 @@ public class TwoStageRate {
     }
 
 
-    public Dialog getFeedbackDialog(final Context context, FeedbackDialog feedbackDialog)
+    public Dialog getFeedbackDialog(final Context context, final FeedbackDialog feedbackDialog)
     {
         // custom dialog
         final Dialog dialog = new Dialog(context);
@@ -221,6 +221,7 @@ public class TwoStageRate {
                 {
                     //// TODO: 2/8/16 : Write a callback with the text in it
                     dialog.dismiss();
+                    feedbackDialog.onFeedbackReceived(etFeedback.getText().toString());
                 }else
                 {
                     Toast.makeText(context, "Bro.. Write Something", Toast.LENGTH_LONG).show();

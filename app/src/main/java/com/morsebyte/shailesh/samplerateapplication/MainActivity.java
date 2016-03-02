@@ -8,7 +8,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.morsebyte.shailesh.twostagerating.FeedbackReceivedListener;
 import com.morsebyte.shailesh.twostagerating.TwoStageRate;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,7 +27,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                TwoStageRate.with(MainActivity.this).showRatePromptDialog();
+                //TwoStageRate.with(MainActivity.this).showRatePromptDialog();
+                TwoStageRate.with(MainActivity.this);
+
+            }
+        });
+
+        TwoStageRate  twoStageRate =  TwoStageRate.with(MainActivity.this);
+        twoStageRate.feedbackDialog.setFeedbackReceivedListener(new FeedbackReceivedListener() {
+            @Override
+            public void onFeedbackReceived(String feedback) {
+                Toast.makeText(MainActivity.this, feedback, Toast.LENGTH_SHORT).show();
             }
         });
     }

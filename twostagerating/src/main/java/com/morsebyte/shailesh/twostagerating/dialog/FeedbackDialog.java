@@ -1,26 +1,20 @@
 package com.morsebyte.shailesh.twostagerating.dialog;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.view.View;
-import android.view.Window;
-import android.widget.EditText;
-import android.widget.RatingBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.morsebyte.shailesh.twostagerating.AppRateDataModel;
-import com.morsebyte.shailesh.twostagerating.R;
+import com.morsebyte.shailesh.twostagerating.FeedbackReceivedListener;
 
 /**
  * Created by GuestHouser on 2/8/16.
  */
 public class FeedbackDialog {
 
+
     String feedbackPromptTitle = "We're Really Sorry";
     String feedbackPromptText = "Could you tell us what problem you faced. This will help us improve.";
     String feedbackPromptPositiveText = "Submit";
     String feedbackPromptNegativeText = "No Thanks!";
+
+    //for callback
+    private FeedbackReceivedListener feedbackReceivedListener;
 
     public void setTitle(String feedbackPromptTitle)
     {
@@ -56,6 +50,18 @@ public class FeedbackDialog {
     {
         return this.feedbackPromptNegativeText;
     }
+
+    public void setFeedbackReceivedListener(FeedbackReceivedListener feedbackReceivedListener)
+    {
+        this.feedbackReceivedListener= feedbackReceivedListener;
+    }
+
+    public void onFeedbackReceived(String s)
+    {
+        feedbackReceivedListener.onFeedbackReceived(s);
+    }
+
+
 
 
 }
