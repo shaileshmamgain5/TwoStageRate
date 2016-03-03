@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 //TwoStageRate.with(MainActivity.this).showRatePromptDialog();
-                TwoStageRate.with(MainActivity.this);
+                TwoStageRate.with(MainActivity.this).incrementEvent();
 
             }
         });
