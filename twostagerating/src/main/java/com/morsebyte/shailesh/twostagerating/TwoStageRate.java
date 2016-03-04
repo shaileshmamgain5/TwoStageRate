@@ -31,11 +31,11 @@ public class TwoStageRate {
     boolean isDebug = false;
 
 
-    public static AppRateDataModel appRateData = new AppRateDataModel();
-    public static RatePromptDialog ratePromptDialog = new RatePromptDialog();
-    public final FeedbackDialog feedbackDialog = new FeedbackDialog();
-    public static ConfirmRateDialog confirmRateDialog = new ConfirmRateDialog();
-    public static Settings settings = new Settings();
+    public AppRateDataModel appRateData = new AppRateDataModel();
+    public RatePromptDialog ratePromptDialog = new RatePromptDialog();
+    public FeedbackDialog feedbackDialog = new FeedbackDialog();
+    public ConfirmRateDialog confirmRateDialog = new ConfirmRateDialog();
+    public Settings settings = new Settings();
 
 
     private Date installDate = new Date();
@@ -287,6 +287,51 @@ public class TwoStageRate {
 
         return dialog;
     }
+
+    /**
+     * Setter and getters for rate prompt dialog
+     * @param ratePromptTitle
+     */
+
+    public void setRatePromptTitle(String ratePromptTitle)
+    {
+        this.ratePromptDialog.ratePromptTitle =ratePromptTitle;
+    }
+    public String getRatePromptTitle( )
+    {
+        return this.ratePromptDialog.ratePromptTitle;
+    }
+
+    public void setRatePromptDescription(String ratePromptText)
+    {
+        this.ratePromptDialog.ratePromptText =ratePromptText;
+    }
+    public String getRatePromptDescription( )
+    {
+        return this.ratePromptDialog.ratePromptText;
+    }
+
+    public void setRatePromptLaterText(String ratePromptLaterText)
+    {
+        this.ratePromptDialog.ratePromptLaterText =ratePromptLaterText;
+    }
+    public String getLaterText( )
+    {
+        return this.ratePromptDialog.ratePromptLaterText;
+    }
+
+    public void setRatePromptNeverText(String ratePromptNeverText)
+    {
+        this.ratePromptDialog.ratePromptNeverText =ratePromptNeverText;
+    }
+    public String getRatePromptNeverText( )
+    {
+        return this.ratePromptDialog.ratePromptNeverText;
+    }
+
+    /**same for feedback dialog
+     *
+     */
 
 
 }

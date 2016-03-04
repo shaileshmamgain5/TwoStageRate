@@ -16,10 +16,10 @@ import com.morsebyte.shailesh.twostagerating.R;
  */
 public class RatePromptDialog {
 
-    String ratePromptTitle = "Rate Us";
-    String ratePromptText = "How would you rate our app?";
-    String ratePromptLaterText= "Remind me later";
-    String ratePromptNeverText = "Never show again";
+   public static  String ratePromptTitle = "Rate Us";
+    public static String ratePromptText = "How would you rate our app?";
+    public static String ratePromptLaterText= "Remind me later";
+    public static String ratePromptNeverText = "Never show again";
 
     public void setTitle(String ratePromptTitle)
     {
