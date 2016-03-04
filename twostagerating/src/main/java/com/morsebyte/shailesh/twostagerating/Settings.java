@@ -4,13 +4,13 @@ package com.morsebyte.shailesh.twostagerating;
  * Created by GuestHouser on 2/29/16.
  */
 public class Settings {
-    private int launchTimes = 10;
+    public int launchTimes = 10;
 
-    private int installDays = 5;
+    public int installDays = 5;
 
-    private int eventsTimes = 10;
+    public int eventsTimes = 10;
 
-    float thresholdRating=3;
+    public float thresholdRating=3;
 
     public enum StoreType {
         GOOGLEPLAY,

@@ -19,10 +19,10 @@ import com.morsebyte.shailesh.twostagerating.TwoStageRate;
  */
 public class ConfirmRateDialog {
 
-    String confirmRateTitle = "Thank you!";
-    String confirmRateText = "Would you like to post your review on app store. This will help and motivate us a lot.";
-    String confirmRateNegativeText = "No Thanks!";
-    String confirmRatePositiveText = "Sure";
+    public String confirmRateTitle = "Thank you!";
+    public String confirmRateText = "Would you like to post your review on app store. This will help and motivate us a lot.";
+    public String confirmRateNegativeText = "No Thanks!";
+    public String confirmRatePositiveText = "Sure";
 
     public void setTitle(String confirmRateTitle)
     {

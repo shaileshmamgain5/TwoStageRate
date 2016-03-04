@@ -8,13 +8,11 @@ import com.morsebyte.shailesh.twostagerating.FeedbackReceivedListener;
 public class FeedbackDialog {
 
 
-    String feedbackPromptTitle = "We're Really Sorry";
-    String feedbackPromptText = "Could you tell us what problem you faced. This will help us improve.";
-    String feedbackPromptPositiveText = "Submit";
-    String feedbackPromptNegativeText = "No Thanks!";
+    public String feedbackPromptTitle = "We're Really Sorry";
+    public String feedbackPromptText = "Could you tell us what problem you faced. This will help us improve.";
+    public String feedbackPromptPositiveText = "Submit";
+    public String feedbackPromptNegativeText = "No Thanks!";
 
-    //for callback
-    private FeedbackReceivedListener feedbackReceivedListener;
 
     public void setTitle(String feedbackPromptTitle)
     {
@@ -50,17 +48,6 @@ public class FeedbackDialog {
     {
         return this.feedbackPromptNegativeText;
     }
-
-    public void setFeedbackReceivedListener(FeedbackReceivedListener feedbackReceivedListener)
-    {
-        this.feedbackReceivedListener= feedbackReceivedListener;
-    }
-
-    public void onFeedbackReceived(String s)
-    {
-        feedbackReceivedListener.onFeedbackReceived(s);
-    }
-
 
 
 

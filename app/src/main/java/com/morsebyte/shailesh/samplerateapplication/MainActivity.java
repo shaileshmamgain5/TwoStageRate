@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        initTwoStage();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -30,11 +31,12 @@ public class MainActivity extends AppCompatActivity {
                 //TwoStageRate.with(MainActivity.this).showRatePromptDialog();
                 TwoStageRate.with(MainActivity.this).incrementEvent();
 
+
             }
         });
 
         TwoStageRate  twoStageRate =  TwoStageRate.with(MainActivity.this);
-        twoStageRate.feedbackDialog.setFeedbackReceivedListener(new FeedbackReceivedListener() {
+        twoStageRate.setFeedbackReceivedListener(new FeedbackReceivedListener() {
             @Override
             public void onFeedbackReceived(String feedback) {
                 Toast.makeText(MainActivity.this, feedback, Toast.LENGTH_SHORT).show();
@@ -62,5 +64,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initTwoStage() {
+        TwoStageRate twoStageRate = TwoStageRate.with(this);
+
+        twoStageRate.setInstallDays(5).setEventsTimes(5).setLaunchTimes(5);
+
+
+
+
+        twoStageRate.setFeedbackReceivedListener(new FeedbackReceivedListener() {
+            @Override
+            public void onFeedbackReceived(String feedback) {
+                Toast.makeText(MainActivity.this, feedback, Toast.LENGTH_SHORT).show();
+            }
+        });
+        twoStageRate.showIfMeetsConditions();
+
+
     }
 }

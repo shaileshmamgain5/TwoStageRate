@@ -57,4 +57,6 @@ public class RatePromptDialog {
         return this.ratePromptNeverText;
     }
 
+
+
 }

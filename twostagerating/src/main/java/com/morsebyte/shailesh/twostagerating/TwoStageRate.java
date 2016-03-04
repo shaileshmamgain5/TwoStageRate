@@ -2,6 +2,7 @@ package com.morsebyte.shailesh.twostagerating;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.view.Window;
@@ -29,6 +30,7 @@ public class TwoStageRate {
     private static final String STOP_TRACK  = "STOPTRACK";
 
     boolean isDebug = false;
+    boolean isDismissible = true;
 
 
     public AppRateDataModel appRateData = new AppRateDataModel();
@@ -85,8 +87,8 @@ public class TwoStageRate {
     }
 
     private boolean checkIfMeetsCondition() {
-        return isOverLaunchTimes() &&
-        isOverInstallDays() && isOverEventCounts();
+        return isOverLaunchTimes() ||
+        isOverInstallDays() || isOverEventCounts();
 
     }
 
@@ -109,7 +111,8 @@ public class TwoStageRate {
     }
 
     private boolean isOverLaunchTimes() {
-        if (Utils.getIntSystemValue(LAUNCH_COUNT, mContext) >= settings.getLaunchTimes()) {
+        int launches = Utils.getIntSystemValue(LAUNCH_COUNT, mContext);
+        if ( launches>= settings.getLaunchTimes()) {
             return true;
         } else {
             int count = Utils.getIntSystemValue(LAUNCH_COUNT, mContext) + 1;
@@ -165,6 +168,7 @@ public class TwoStageRate {
         Utils.setLongSystemValue(INSTALL_DATE, millis, mContext);
         Utils.setIntSystemValue(INSTALL_DAYS, 0, mContext);
         Utils.setIntSystemValue(EVENT_COUNT, 0, mContext);
+        Utils.setIntSystemValue(LAUNCH_COUNT, 0, mContext);
 
         Utils.setBooleanSystemValue(STOP_TRACK, false, mContext);
 
@@ -175,6 +179,7 @@ public class TwoStageRate {
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_rate_initial);
+        dialog.setCancelable(isDismissible);
 
         // set the custom dialog components - text, image and button
         TextView title = (TextView) dialog.findViewById(R.id.tvRatePromptTitle);
@@ -203,6 +208,13 @@ public class TwoStageRate {
                 dialog.dismiss();
             }
         });
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                onDialogDismissed();
+            }
+        });
+
         return dialog;
     }
 
@@ -211,6 +223,7 @@ public class TwoStageRate {
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_confirm_rate);
+        dialog.setCancelable(isDismissible);
 
         // set the custom dialog components - text, image and button
         TextView title = (TextView) dialog.findViewById(R.id.tvConfirmRateTitle);
@@ -242,6 +255,14 @@ public class TwoStageRate {
             }
         });
 
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                onDialogDismissed();
+            }
+        });
+
+
 
         return dialog;
     }
@@ -251,6 +272,7 @@ public class TwoStageRate {
         // custom dialog
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(isDismissible);
         dialog.setContentView(R.layout.dialog_feedback);
 
         // set the custom dialog components - text, image and button
@@ -277,10 +299,17 @@ public class TwoStageRate {
                 if (etFeedback.getText() != null && etFeedback.getText().length() > 0) {
                     //// TODO: 2/8/16 : Write a callback with the text in it
                     dialog.dismiss();
-                    feedbackDialog.onFeedbackReceived(etFeedback.getText().toString());
+                    onFeedbackReceived(etFeedback.getText().toString());
                 } else {
                     Toast.makeText(context, "Bro.. Write Something", Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                onDialogDismissed();
             }
         });
 
@@ -293,45 +322,152 @@ public class TwoStageRate {
      * @param ratePromptTitle
      */
 
-    public void setRatePromptTitle(String ratePromptTitle)
+    public TwoStageRate setRatePromptTitle(String ratePromptTitle)
     {
         this.ratePromptDialog.ratePromptTitle =ratePromptTitle;
+        return this;
     }
-    public String getRatePromptTitle( )
-    {
-        return this.ratePromptDialog.ratePromptTitle;
-    }
-
-    public void setRatePromptDescription(String ratePromptText)
+    public TwoStageRate setRatePromptDescription(String ratePromptText)
     {
         this.ratePromptDialog.ratePromptText =ratePromptText;
+        return this;
     }
-    public String getRatePromptDescription( )
-    {
-        return this.ratePromptDialog.ratePromptText;
-    }
-
-    public void setRatePromptLaterText(String ratePromptLaterText)
+    public TwoStageRate setRatePromptLaterText(String ratePromptLaterText)
     {
         this.ratePromptDialog.ratePromptLaterText =ratePromptLaterText;
+        return this;
     }
-    public String getLaterText( )
-    {
-        return this.ratePromptDialog.ratePromptLaterText;
-    }
-
-    public void setRatePromptNeverText(String ratePromptNeverText)
+    public TwoStageRate setRatePromptNeverText(String ratePromptNeverText)
     {
         this.ratePromptDialog.ratePromptNeverText =ratePromptNeverText;
-    }
-    public String getRatePromptNeverText( )
-    {
-        return this.ratePromptDialog.ratePromptNeverText;
+        return this;
     }
 
     /**same for feedback dialog
      *
      */
+
+    //for callback
+    private FeedbackReceivedListener feedbackReceivedListener;
+    private DialogDismissedListener dialogDismissedListener;
+
+    public TwoStageRate setFeedbackDialogTitle(String feedbackPromptTitle)
+    {
+        this.feedbackDialog.feedbackPromptTitle =feedbackPromptTitle;
+        return this;
+    }
+
+    public TwoStageRate setFeedbackDialogDescription(String feedbackPromptText)
+    {
+        this.feedbackDialog.feedbackPromptText =feedbackPromptText;
+        return this;
+    }
+
+    public TwoStageRate setFeedbackDialogPositiveText(String feedbackPromptPositiveText)
+    {
+        this.feedbackDialog.feedbackPromptPositiveText =feedbackPromptPositiveText;
+        return this;
+    }
+
+
+    public TwoStageRate setFeedbackDialogNegativeText(String feedbackPromptNegativeText)
+    {
+        this.feedbackDialog.feedbackPromptNegativeText =feedbackPromptNegativeText;
+        return this;
+    }
+
+    public TwoStageRate setFeedbackReceivedListener(FeedbackReceivedListener feedbackReceivedListener)
+    {
+        this.feedbackReceivedListener= feedbackReceivedListener;
+        return this;
+    }
+
+    public void onFeedbackReceived(String s)
+    {
+        feedbackReceivedListener.onFeedbackReceived(s);
+    }
+
+    public TwoStageRate setOnDialogDismissedListener(DialogDismissedListener dialogDismissedListener)
+    {
+        this.dialogDismissedListener= dialogDismissedListener;
+        return this;
+    }
+
+    public void onDialogDismissed()
+    {
+        resetTwoStage();
+        //dialogDismissedListener.onDialogDismissed();
+    }
+
+    /*
+     *All setters for ConfirmRateDialog
+     */
+
+    public TwoStageRate setConfirmRateDialogTitle(String confirmRateTitle)
+    {
+        this.confirmRateDialog.confirmRateTitle =confirmRateTitle;
+        return this;
+    }
+
+
+    public TwoStageRate setConfirmRateDialogDescription(String confirmRateText)
+    {
+        this.confirmRateDialog.confirmRateText =confirmRateText;
+        return this;
+    }
+    public TwoStageRate setConfirmRateDialogNegativeText(String confirmRateNegativeText)
+    {
+        this.confirmRateDialog.confirmRateNegativeText =confirmRateNegativeText;
+        return this;
+    }
+    public TwoStageRate setConfirmRateDialogPositiveText(String confirmRatePositiveText)
+    {
+        this.confirmRateDialog.confirmRatePositiveText =confirmRatePositiveText;
+        return this;
+    }
+
+    /**
+     * Setters for Settings
+     */
+
+    public TwoStageRate setInstallDays( int installDays)
+    {
+        this.settings.installDays = installDays;
+        return this;
+    }
+    public TwoStageRate setLaunchTimes( int launchTimes)
+    {
+        this.settings.launchTimes = launchTimes;
+        return this;
+    }
+
+    public TwoStageRate setEventsTimes( int eventsTimes)
+    {
+        this.settings.eventsTimes = eventsTimes;
+        return this;
+    }
+
+
+    public TwoStageRate setThresholdRating( float thresholdRating)
+    {
+        this.settings.thresholdRating = thresholdRating;
+        return this;
+    }
+
+    public TwoStageRate setStoreType(Settings.StoreType storeType)
+    {
+        this.settings.storeType =storeType;
+        return this;
+    }
+
+    public TwoStageRate setDialogCancelable(Boolean isDismissible)
+    {
+        this.isDismissible = isDismissible;
+        return this;
+    }
+
+
+
 
 
 }
