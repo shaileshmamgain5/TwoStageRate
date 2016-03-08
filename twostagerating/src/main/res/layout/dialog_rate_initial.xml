@@ -12,15 +12,7 @@
         android:paddingBottom="0dp"
         android:textColor="@color/dialog_title_text_color"
         />
-    <TextView
-        android:id="@+id/tvRatePromptText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size_medium"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:textColor="@color/dialog_subtext_text_color"
-        />
+
     <RatingBar
         android:id="@+id/rbRatePromptBar"
         android:layout_width="wrap_content"

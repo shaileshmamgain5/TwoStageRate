@@ -23,11 +23,11 @@ import java.util.Date;
  */
 public class TwoStageRate {
 
-    private static final String LAUNCH_COUNT = "LAUNCHCOUNT";
-    private static final String INSTALL_DAYS = "INSTALLDAYS";
-    private static final String INSTALL_DATE = "INSTALLDATE";
-    private static final String EVENT_COUNT = "EVENTCOUNT";
-    private static final String STOP_TRACK  = "STOPTRACK";
+    private static final String LAUNCH_COUNT = "TWOSTAGELAUNCHCOUNT";
+    private static final String INSTALL_DAYS = "TWOSTAGEINSTALLDAYS";
+    private static final String INSTALL_DATE = "TWOSTAGEINSTALLDATE";
+    private static final String EVENT_COUNT = "TWOSTAGEEVENTCOUNT";
+    private static final String STOP_TRACK  = "TWOSTAGESTOPTRACK";
 
     boolean isDebug = false;
     boolean isDismissible = true;
@@ -185,7 +185,6 @@ public class TwoStageRate {
         TextView title = (TextView) dialog.findViewById(R.id.tvRatePromptTitle);
         title.setText(ratePromptDialog.getTitle());
         TextView text = (TextView) dialog.findViewById(R.id.tvRatePromptText);
-        text.setText(ratePromptDialog.getDescription());
         RatingBar rbRating = (RatingBar) dialog.findViewById(R.id.rbRatePromptBar);
 
         rbRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -325,11 +324,6 @@ public class TwoStageRate {
     public TwoStageRate setRatePromptTitle(String ratePromptTitle)
     {
         this.ratePromptDialog.ratePromptTitle =ratePromptTitle;
-        return this;
-    }
-    public TwoStageRate setRatePromptDescription(String ratePromptText)
-    {
-        this.ratePromptDialog.ratePromptText =ratePromptText;
         return this;
     }
     public TwoStageRate setRatePromptLaterText(String ratePromptLaterText)
