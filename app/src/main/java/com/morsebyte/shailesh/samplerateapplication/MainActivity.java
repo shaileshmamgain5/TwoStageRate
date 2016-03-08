@@ -71,16 +71,41 @@ public class MainActivity extends AppCompatActivity {
 
         twoStageRate.setInstallDays(5).setEventsTimes(5).setLaunchTimes(5);
 
-
-
-
         twoStageRate.setFeedbackReceivedListener(new FeedbackReceivedListener() {
             @Override
             public void onFeedbackReceived(String feedback) {
                 Toast.makeText(MainActivity.this, feedback, Toast.LENGTH_SHORT).show();
             }
         });
+
+
+        /**
+         * Provide your custom text on initiial rate prompt dialog
+         */
+        twoStageRate.with(this).setRatePromptTitle("INITIAL_TITLE").setRatePromptDescription("INITIAL_DESCRIPTION").
+                setRatePromptLaterText("LATER_TEXT").setRatePromptNeverText("NEVER_TEXT");
+
+        /**
+         * provide custom text on the confirmation dialog
+         */
+        twoStageRate.with(this).setConfirmRateDialogTitle("CONFIRMATION_TITLE").setConfirmRateDialogDescription("CONFIRMATION_DESCRITPION").
+                setConfirmRateDialogPositiveText("POSITIVE_BUTTON_TEXT").setConfirmRateDialogNegativeText("NEGATIVE_BUTTON_TEXT");
+
+        /**
+         * provide custom text on feedback dialog
+         */
+        twoStageRate.with(this).setFeedbackDialogTitle("FEEDBACK_TITLE").setFeedbackDialogDescription("FEEDBACK_DIALOG_DESCRIPTION").
+                setFeedbackDialogPositiveText("POSITIVE_BUTTON_TEXT").setFeedbackDialogNegativeText("NEGATIVE_BUTTON_TEXT");
+
+
+
+
+        twoStageRate.setDialogCancelable(false);
+        twoStageRate.resetOnDismiss(true);
+
+
         twoStageRate.showIfMeetsConditions();
+
 
 
     }

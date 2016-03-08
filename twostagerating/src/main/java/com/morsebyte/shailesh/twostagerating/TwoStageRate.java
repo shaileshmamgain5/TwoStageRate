@@ -31,6 +31,7 @@ public class TwoStageRate {
 
     boolean isDebug = false;
     boolean isDismissible = true;
+    boolean shouldResetOnDismiss = true;
 
 
     public AppRateDataModel appRateData = new AppRateDataModel();
@@ -395,7 +396,8 @@ public class TwoStageRate {
 
     public void onDialogDismissed()
     {
-        resetTwoStage();
+        if(shouldResetOnDismiss){
+        resetTwoStage();}
         //dialogDismissedListener.onDialogDismissed();
     }
 
@@ -463,6 +465,12 @@ public class TwoStageRate {
     public TwoStageRate setDialogCancelable(Boolean isDismissible)
     {
         this.isDismissible = isDismissible;
+        return this;
+    }
+
+    public TwoStageRate resetOnDismiss(boolean shouldReset)
+    {
+        this.shouldResetOnDismiss = shouldReset;
         return this;
     }
 
