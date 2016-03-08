@@ -16,8 +16,7 @@ import com.morsebyte.shailesh.twostagerating.R;
  */
 public class RatePromptDialog {
 
-   public static  String ratePromptTitle = "Rate Us";
-    public static String ratePromptText = "How would you rate our app?";
+   public static  String ratePromptTitle = "How would you rate our app?";
     public static String ratePromptLaterText= "Remind me later";
     public static String ratePromptNeverText = "Never show again";
 
@@ -30,14 +29,6 @@ public class RatePromptDialog {
         return this.ratePromptTitle;
     }
 
-    public void setDescription(String ratePromptText)
-    {
-        this.ratePromptText =ratePromptText;
-    }
-    public String getDescription( )
-    {
-        return this.ratePromptText;
-    }
 
     public void setLaterText(String ratePromptLaterText)
     {
