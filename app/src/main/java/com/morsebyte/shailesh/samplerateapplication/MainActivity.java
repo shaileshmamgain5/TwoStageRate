@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Provide your custom text on initiial rate prompt dialog
          */
-        twoStageRate.with(this).setRatePromptTitle("INITIAL_TITLE").setRatePromptDescription("INITIAL_DESCRIPTION").
+        twoStageRate.with(this).setRatePromptTitle("INITIAL_TITLE").
                 setRatePromptLaterText("LATER_TEXT").setRatePromptNeverText("NEVER_TEXT");
 
         /**
