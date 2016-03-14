@@ -19,6 +19,17 @@ public class RatePromptDialog {
    public static  String ratePromptTitle = "How would you rate our app?";
     public static String ratePromptLaterText= "Remind me later";
     public static String ratePromptNeverText = "Never show again";
+    public boolean dismissible = true;
+    public void setDismissible(boolean dismissible)
+    {
+        this.dismissible = dismissible;
+    }
+
+    public boolean isDismissible()
+    {
+        return this.dismissible;
+    }
+
 
     public void setTitle(String ratePromptTitle)
     {

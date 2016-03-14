@@ -12,6 +12,16 @@ public class FeedbackDialog {
     public String feedbackPromptText = "Could you tell us what problem you faced. This will help us improve.";
     public String feedbackPromptPositiveText = "Submit";
     public String feedbackPromptNegativeText = "No Thanks!";
+    public boolean dismissible = true;
+    public void setDismissible(boolean dismissible)
+    {
+        this.dismissible = dismissible;
+    }
+
+    public boolean isDismissible()
+    {
+        return this.dismissible;
+    }
 
 
     public void setTitle(String feedbackPromptTitle)
@@ -48,6 +58,8 @@ public class FeedbackDialog {
     {
         return this.feedbackPromptNegativeText;
     }
+
+
 
 
 

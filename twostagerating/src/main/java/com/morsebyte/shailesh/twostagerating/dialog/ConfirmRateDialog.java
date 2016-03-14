@@ -23,6 +23,17 @@ public class ConfirmRateDialog {
     public String confirmRateText = "Would you like to post your review on app store. This will help and motivate us a lot.";
     public String confirmRateNegativeText = "No Thanks!";
     public String confirmRatePositiveText = "Sure";
+    public boolean dismissible = true;
+    public void setDismissible(boolean dismissible)
+    {
+        this.dismissible = dismissible;
+    }
+
+    public boolean isDismissible()
+    {
+        return this.dismissible;
+    }
+
 
     public void setTitle(String confirmRateTitle)
     {

@@ -30,7 +30,6 @@ public class TwoStageRate {
     private static final String STOP_TRACK  = "TWOSTAGESTOPTRACK";
 
     boolean isDebug = false;
-    boolean isDismissible = true;
     boolean shouldResetOnDismiss = true;
 
 
@@ -44,7 +43,7 @@ public class TwoStageRate {
     private Date installDate = new Date();
 
 
-    Context mContext;
+    private static Context mContext;
 
     private static TwoStageRate singleton;
 
@@ -61,6 +60,7 @@ public class TwoStageRate {
                 }
             }
         }
+        mContext = context;
         return singleton;
     }
 
@@ -180,12 +180,11 @@ public class TwoStageRate {
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_rate_initial);
-        dialog.setCancelable(isDismissible);
+        dialog.setCancelable(this.ratePromptDialog.isDismissible());
 
         // set the custom dialog components - text, image and button
         TextView title = (TextView) dialog.findViewById(R.id.tvRatePromptTitle);
         title.setText(ratePromptDialog.getTitle());
-        TextView text = (TextView) dialog.findViewById(R.id.tvRatePromptText);
         RatingBar rbRating = (RatingBar) dialog.findViewById(R.id.rbRatePromptBar);
 
         rbRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -223,7 +222,7 @@ public class TwoStageRate {
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_confirm_rate);
-        dialog.setCancelable(isDismissible);
+        dialog.setCancelable(this.confirmRateDialog.isDismissible());
 
         // set the custom dialog components - text, image and button
         TextView title = (TextView) dialog.findViewById(R.id.tvConfirmRateTitle);
@@ -272,7 +271,7 @@ public class TwoStageRate {
         // custom dialog
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(isDismissible);
+        dialog.setCancelable(this.feedbackDialog.isDismissible());
         dialog.setContentView(R.layout.dialog_feedback);
 
         // set the custom dialog components - text, image and button
@@ -338,6 +337,12 @@ public class TwoStageRate {
         return this;
     }
 
+    public TwoStageRate setRatePromptDismissible(boolean dismissible)
+    {
+        this.ratePromptDialog.dismissible = dismissible;
+        return this;
+    }
+
     /**same for feedback dialog
      *
      */
@@ -368,6 +373,11 @@ public class TwoStageRate {
     public TwoStageRate setFeedbackDialogNegativeText(String feedbackPromptNegativeText)
     {
         this.feedbackDialog.feedbackPromptNegativeText =feedbackPromptNegativeText;
+        return this;
+    }
+    public TwoStageRate setFeedbackDialogDismissible(boolean dismissible)
+    {
+        this.feedbackDialog.dismissible = dismissible;
         return this;
     }
 
@@ -422,6 +432,12 @@ public class TwoStageRate {
         return this;
     }
 
+    public TwoStageRate setConfirmRateDialogDismissible(boolean dismissible)
+    {
+        this.confirmRateDialog.dismissible = dismissible;
+        return this;
+    }
+
     /**
      * Setters for Settings
      */
@@ -453,12 +469,6 @@ public class TwoStageRate {
     public TwoStageRate setStoreType(Settings.StoreType storeType)
     {
         this.settings.storeType =storeType;
-        return this;
-    }
-
-    public TwoStageRate setDialogCancelable(Boolean isDismissible)
-    {
-        this.isDismissible = isDismissible;
         return this;
     }
 
