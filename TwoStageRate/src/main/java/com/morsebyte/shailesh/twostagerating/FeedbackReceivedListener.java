@@ -5,4 +5,5 @@ package com.morsebyte.shailesh.twostagerating;
  */
 public interface FeedbackReceivedListener {
     public void onFeedbackReceived(String feedback);
+
 }
