@@ -11,13 +11,22 @@ To put it simply, it can be done just in two lines of code with default settings
 ` TwoStageRate twoStageRate = TwoStageRate.with(this);
          twoStageRate.showIfMeetsConditions();`
          
-Also one can set basic settings like
+         
+         
+         
+         
+**( optional)**Also one can set basic settings like
 
 ` TwoStageRate twoStageRate = TwoStageRate.with(this);
     twoStageRate.setInstallDays(5).setEventsTimes(5).setLaunchTimes(5);twoStageRate.resetOnDismiss(true);
          twoStageRate.showIfMeetsConditions();`
          
- On receiving feedback, any action can be done on the feedback using feedbacklistener
+         
+         
+         
+         
+         
+**( optional)** On receiving feedback, any action can be done on the feedback using feedbacklistener
  
  `twoStageRate.setFeedbackReceivedListener(new FeedbackReceivedListener() {
               @Override
@@ -25,9 +34,14 @@ Also one can set basic settings like
                   Toast.makeText(MainActivity.this, feedback, Toast.LENGTH_SHORT).show();`
                   
                   
- However if you want to costumize all three diologs as per your app specific text, you can do it like this
+                  
+                  
+                  
+                  
+                  
+ **( optional)**However if you want to costumize all three diologs as per your app specific text, you can do it like this:
  
- ` TwoStageRate twoStageRate = TwoStageRate.with(this);
+ 'TwoStageRate twoStageRate = TwoStageRate.with(this);                               
   
           twoStageRate.setInstallDays(5).setEventsTimes(5).setLaunchTimes(5);
   
