@@ -2,7 +2,12 @@
 TwoStageRate is a library to help you promote your android app by prompting users to rate the app after using it for a few days. Also its two stage process ensures higher reviews to go to playstore while getting useful feedback on lower ratings.
 
 # Install
-You can download from maven central.
+
+For gradle, go to your app.gradle file and inside ` dependencies{}` add :
+
+` compile 'com.morsebyte.shailesh.twostagerating:TwoStageRate:1.0'`
+
+Thats it, you are good to go.
 
 #  Usage
 
@@ -35,10 +40,6 @@ To put it simply, it can be done just in two lines of code with default settings
                   
                   
                   
-                  
-                  
-                  
-                  
  **( optional)**However if you want to costumize all three diologs as per your app specific text, you can do it like this:
  
  'TwoStageRate twoStageRate = TwoStageRate.with(this);                               
@@ -60,7 +61,7 @@ To put it simply, it can be done just in two lines of code with default settings
   
   
          /* *
-           * Provide your custom text on initiial rate prompt dialog*/
+           * Provide your custom text on initial rate prompt dialog*/
            
           twoStageRate.with(this).setRatePromptTitle("INITIAL_TITLE").
                   setRatePromptLaterText("LATER_TEXT").setRatePromptNeverText("NEVER_TEXT").setRatePromptDismissible(false);
