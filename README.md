@@ -22,7 +22,8 @@ To put it simply, it can be done just in one line of code inside your activity's
 
 It sets the texts (as in above pics) and conditions (5 days of use or 5 times opening of app or 5 times setting of an custom event) to defaults.
          
-         
+
+
 **( optional)** If you want to change conditions, you can do this insted inside activity's ' onCreate(..'
     
     TwoStageRate twoStageRate = TwoStageRate.with(this);
@@ -37,6 +38,7 @@ It sets the texts (as in above pics) and conditions (5 days of use or 5 times op
 
          TwoStageRate.with(MainActivity.this).incrementEvent();
          
+
 **( optional)** On receiving feedback, any action can be done on the feedback using feedbacklistener
  
          
