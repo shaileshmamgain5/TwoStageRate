@@ -1,8 +1,9 @@
 # TwoStageRate
 TwoStageRate is a library to help you promote your android app by prompting users to rate the app after using it for a few days. Also its two stage process ensures higher reviews to go to playstore while getting useful feedback on lower ratings.
 
-Stage 1) A dialog is displayed to prompt users to rate your app.
-Stage 2) If user gives 3 or less rating -> A feedback dialog is shown asking users what went wrong?
+**Stage 1)** A dialog is displayed to prompt users to rate your app.
+
+**Stage 2)** If user gives 3 or less rating -> A feedback dialog is shown asking users what went wrong?
          If users gives 4 or more rating -> User is requested to rate your app on playstore.
 
 # Install
