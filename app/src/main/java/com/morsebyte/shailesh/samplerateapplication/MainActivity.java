@@ -85,22 +85,29 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, feedback, Toast.LENGTH_SHORT).show();
             }
         });
+/*
 
 
-       /* *
-         * Provide your custom text on initiial rate prompt dialog*/
+       */
+/* *
+         * Provide your custom text on initiial rate prompt dialog*//*
+
 
         twoStageRate.with(this).setRatePromptTitle("INITIAL_TITLE").
                 setRatePromptLaterText("LATER_TEXT").setRatePromptNeverText("NEVER_TEXT").setRatePromptDismissible(false);
 
-        /**
-         * provide custom text on the confirmation dialog*/
+        */
+/**
+         * provide custom text on the confirmation dialog*//*
+
 
         twoStageRate.with(this).setConfirmRateDialogTitle("CONFIRMATION_TITLE").setConfirmRateDialogDescription("CONFIRMATION_DESCRITPION").
                 setConfirmRateDialogPositiveText("POSITIVE_BUTTON_TEXT").setConfirmRateDialogNegativeText("NEGATIVE_BUTTON_TEXT").setConfirmRateDialogDismissible(true);
 
-        /**
-         * provide custom text on feedback dialog*/
+        */
+/**
+         * provide custom text on feedback dialog*//*
+
 
         twoStageRate.with(this).setFeedbackDialogTitle("FEEDBACK_TITLE").setFeedbackDialogDescription("FEEDBACK_DIALOG_DESCRIPTION").
                 setFeedbackDialogPositiveText("POSITIVE_BUTTON_TEXT").setFeedbackDialogNegativeText("NEGATIVE_BUTTON_TEXT").setFeedbackDialogDismissible(false);
@@ -108,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+*/
 
     }
 }
