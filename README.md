@@ -4,8 +4,12 @@ TwoStageRate is a library to help you promote your android app by prompting user
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Two%20Stage%20Rate-brightgreen.svg?style=social)]()
 
 # Screenshots and stages
+
 <img src="https://raw.githubusercontent.com/shaileshmamgain5/TwoStageRate/master/snapshots/ratingLoop.gif" width="200" height="350" />
 <img src="https://raw.githubusercontent.com/shaileshmamgain5/TwoStageRate/master/snapshots/feedbackLoop.gif" width="200" height="350" />
+
+
+
 <img src="https://raw.githubusercontent.com/shaileshmamgain5/TwoStageRate/master/snapshots/Screenshot_20170102-161620.png" width="200" height="350" />
 <img src="https://raw.githubusercontent.com/shaileshmamgain5/TwoStageRate/master/snapshots/Screenshot_20170102-161628.png" width="200" height="350" />
 <img src="https://raw.githubusercontent.com/shaileshmamgain5/TwoStageRate/master/snapshots/Screenshot_20170102-161834.png" width="200" height="350" />
@@ -19,7 +23,7 @@ TwoStageRate is a library to help you promote your android app by prompting user
 
 For gradle, go to your app.gradle file and inside ` dependencies{}` add :
 
-         compile 'com.morsebyte.shailesh.twostagerating:TwoStageRate:1.0'
+         compile 'com.morsebyte.shailesh.twostagerating:TwoStageRate:2.0'
 
 Thats it, you are good to go.
 
@@ -45,6 +49,11 @@ It sets the texts (as in above pics) and conditions (5 days of use or 5 times op
     //If user gives rating the first time but declines to give playstore rating/ feedback we can reset the
     //TwoStageRate. These are false by default.
     twoStageRate.resetOnFeedBackDeclined(true).resetOnRatingDeclined(true);
+    
+    //You may choose to show/hide your app icon in rating prompt (default true)
+    twoStageRate.setShowAppIcon(true);
+    
+    //Finally call to show feedback dialog if any of condition is met.
     twoStageRate.showIfMeetsConditions();
          
 
