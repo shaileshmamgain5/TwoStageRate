@@ -66,9 +66,10 @@ public class MainActivity extends AppCompatActivity {
 
         twoStageRate.setInstallDays(5).setEventsTimes(3).setLaunchTimes(5);
 
-        twoStageRate.resetOnDismiss(true);
+        twoStageRate.resetOnDismiss(true).resetOnFeedBackDeclined(true).resetOnRatingDeclined(true);
 
         twoStageRate.setShowAppIcon(true);
+
 
         twoStageRate.showIfMeetsConditions();
 

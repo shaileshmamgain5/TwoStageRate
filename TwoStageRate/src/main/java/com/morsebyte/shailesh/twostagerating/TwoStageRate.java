@@ -35,11 +35,14 @@ public class TwoStageRate {
     public ConfirmRateDialog confirmRateDialog = new ConfirmRateDialog();
     public static Settings settings = new Settings();
     boolean isDebug = false;
-    boolean shouldResetOnDismiss = true;
     private Context mContext;
 
 
     private static final String SHARED_PREFERENCES_SHOW_ICON_KEY = "TwoStageRateShowAppIcon";
+    private static final String SHARED_PREFERENCES_SHOULD_RESET_ON_DISMISS = "TwoStageRateShouldRefreshOnPrimaryDISMISS";
+    private static final String SHARED_PREFERENCES_SHOULD_RESET_ON_RATING_DECLINED = "TwoStageRateShouldResetOnDecliningToRate";
+    private static final String SHARED_PREFERENCES_SHOULD_RESET_ON_FEEDBACK_DECLINED = "TwoStageRateShouldResetOnDecliningForFeedBack";
+
     private static final String SHARED_PREFERENCES_TOTAL_LAUNCH_TIMES = "TwoStageRateTotalLaunchTimes";
     private static final String SHARED_PREFERENCES_TOTAL_EVENTS_COUNT = "TwoStageRateTotalEventCount";
     private static final String SHARED_PREFERENCES_TOTAL_INSTALL_DAYS = "TwoStageRateTotalInstallDays";
@@ -98,10 +101,6 @@ public class TwoStageRate {
 
     private void track() {
 
-    }
-
-    public void setShowAppIcon(boolean showAppIcon) {
-        Utils.setBooleanSystemValue(SHARED_PREFERENCES_SHOW_ICON_KEY, showAppIcon, mContext);
     }
 
     private boolean checkIfMeetsCondition() {
@@ -274,6 +273,10 @@ public class TwoStageRate {
             @Override
             public void onClick(View v) {
                 //ToDo : emit something here
+                //Reseting twostage if declined and setting is done so
+                if ((Utils.getBooleanSystemValue(SHARED_PREFERENCES_SHOULD_RESET_ON_RATING_DECLINED, mContext, false))) {
+                    resetTwoStage();
+                }
                 dialog.dismiss();
             }
 
@@ -323,7 +326,11 @@ public class TwoStageRate {
             @Override
             public void onClick(View v) {
                 //ToDo : emit something here
-                dialog.dismiss();
+                //Reseting twostage if declined and setting is done so
+                if ((Utils.getBooleanSystemValue(SHARED_PREFERENCES_SHOULD_RESET_ON_FEEDBACK_DECLINED, mContext, false))) {
+                    resetTwoStage();
+                }
+                    dialog.dismiss();
             }
 
         });
@@ -416,7 +423,7 @@ public class TwoStageRate {
     }
 
     public void onDialogDismissed() {
-        if (shouldResetOnDismiss) {
+        if ((Utils.getBooleanSystemValue(SHARED_PREFERENCES_SHOULD_RESET_ON_DISMISS, mContext, true))) {
             resetTwoStage();
         }
         //dialogDismissedListener.onDialogDismissed();
@@ -486,7 +493,27 @@ public class TwoStageRate {
     }
 
     public TwoStageRate resetOnDismiss(boolean shouldReset) {
-        this.shouldResetOnDismiss = shouldReset;
+        Utils.setBooleanSystemValue(SHARED_PREFERENCES_SHOULD_RESET_ON_DISMISS, shouldReset, mContext);
+        return this;
+    }
+
+    /**
+     * User gave good rating at first but declined to rate on playstore
+     * @param shouldReset
+     * @return
+     */
+    public TwoStageRate resetOnRatingDeclined(boolean shouldReset) {
+        Utils.setBooleanSystemValue(SHARED_PREFERENCES_SHOULD_RESET_ON_RATING_DECLINED, shouldReset, mContext);
+        return this;
+    }
+
+    public TwoStageRate resetOnFeedBackDeclined(boolean shouldReset) {
+        Utils.setBooleanSystemValue(SHARED_PREFERENCES_SHOULD_RESET_ON_FEEDBACK_DECLINED, shouldReset, mContext);
+        return this;
+    }
+
+    public TwoStageRate setShowAppIcon(boolean showAppIcon) {
+        Utils.setBooleanSystemValue(SHARED_PREFERENCES_SHOW_ICON_KEY, showAppIcon, mContext);
         return this;
     }
 
