@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SampleRateApplication.iml" filepath="$PROJECT_DIR$/SampleRateApplication.iml" />
       <module fileurl="file://$PROJECT_DIR$/TwoStageRate/TwoStageRate.iml" filepath="$PROJECT_DIR$/TwoStageRate/TwoStageRate.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TwoStageRate/TwoStageRate-TwoStageRate.iml" filepath="$PROJECT_DIR$/TwoStageRate/TwoStageRate-TwoStageRate.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/twostagerate.iml" filepath="$PROJECT_DIR$/twostagerate.iml" />
     </modules>
