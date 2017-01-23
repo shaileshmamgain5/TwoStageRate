@@ -4,7 +4,8 @@ TwoStageRate is a library to help you promote your android app by prompting user
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Two%20Stage%20Rate-brightgreen.svg?style=social)]()
 
 # Screenshots and stages
-
+<img src="https://raw.githubusercontent.com/shaileshmamgain5/TwoStageRate/master/snapshots/ratingLoop.gif" width="200" height="350" />
+<img src="https://raw.githubusercontent.com/shaileshmamgain5/TwoStageRate/master/snapshots/feedbackLoop.gif" width="200" height="350" />
 <img src="https://raw.githubusercontent.com/shaileshmamgain5/TwoStageRate/master/snapshots/Screenshot_20170102-161620.png" width="200" height="350" />
 <img src="https://raw.githubusercontent.com/shaileshmamgain5/TwoStageRate/master/snapshots/Screenshot_20170102-161628.png" width="200" height="350" />
 <img src="https://raw.githubusercontent.com/shaileshmamgain5/TwoStageRate/master/snapshots/Screenshot_20170102-161834.png" width="200" height="350" />
@@ -37,8 +38,13 @@ It sets the texts (as in above pics) and conditions (5 days of use or 5 times op
     TwoStageRate twoStageRate = TwoStageRate.with(this);
     //initialises condintions to 5 days of use, 10 times of launch use or 5 triggers of custom event.
     twoStageRate.setInstallDays(5).setLaunchTimes(10).setEventsTimes(5);
-    //If user dismisses it, it simply resets again.
-    twoStageRate.resetOnDismiss(true);
+    
+    //If user dismisses it, it simply resets again. (when user dismissed by clicking anywhere else on screen)
+    twoStageRate.resetOnDismiss(true);  //it is true by default
+    
+    //If user gives rating the first time but declines to give playstore rating/ feedback we can reset the
+    //TwoStageRate. These are false by default.
+    twoStageRate.resetOnFeedBackDeclined(true).resetOnRatingDeclined(true);
     twoStageRate.showIfMeetsConditions();
          
 
@@ -46,16 +52,34 @@ It sets the texts (as in above pics) and conditions (5 days of use or 5 times op
 
          TwoStageRate.with(MainActivity.this).incrementEvent();
          
-
-**( optional)** On receiving feedback, any action can be done on the feedback using feedbacklistener
+For now you need to add a feedback listener wherever you want to listen for feedback (see below how). You may want to add a feedback listener to this as well. 
+         
+         TwoStageRate.with(MainActivity.this).incrementEvent()
+         .setFeedbackReceivedListener(new FeedbackReceivedListener() {
+              @Override
+              public void onFeedbackReceived(String feedback) {
+                  Toast.makeText(MainActivity.this, feedback, Toast.LENGTH_SHORT).show();
+                  }
+              };
+         
+**( optional)** On receiving feedback, any action can be done on the feedback using feedbacklistener. There are two types, one with feedback only as an argument and one with feedback and rating as argument.
  
          
+         //Feedback listener giving back only the feedback
          twoStageRate.setFeedbackReceivedListener(new FeedbackReceivedListener() {
               @Override
               public void onFeedbackReceived(String feedback) {
                   Toast.makeText(MainActivity.this, feedback, Toast.LENGTH_SHORT).show();
                   }
               }
+              
+         //Feedback listener with rating information as well
+         twoStageRate.setFeedbackWithRatingReceivedListener(new FeedbackWithRatingReceivedListener() {
+            @Override
+            public void onFeedbackReceived(float rating, String feedback) {
+                Toast.makeText(MainActivity.this, "Rating :" + rating + "Feedback :" + feedback, Toast.LENGTH_SHORT).show();
+            }
+        });
                   
 
 **( optional)**However if you want to costumize all three diologs as per your app specific text, you can do it like this (You may want to include it inside such a function to be called from 'onCreate(.. ':
@@ -65,7 +89,7 @@ It sets the texts (as in above pics) and conditions (5 days of use or 5 times op
                   TwoStageRate twoStageRate = TwoStageRate.with(this);                               
                   //Setting conditions
                   twoStageRate.setInstallDays(5).setEventsTimes(5).setLaunchTimes(5);
-                  twoStageRate.resetOnDismiss(true);
+                  twoStageRate.resetOnDismiss(true).resetOnFeedBackDeclined(true).resetOnRatingDeclined(false);
                   twoStageRate.showIfMeetsConditions();
 
                   //Setting feedback listener
@@ -94,6 +118,9 @@ It sets the texts (as in above pics) and conditions (5 days of use or 5 times op
                    setFeedbackDialogNegativeText("NEGATIVE_BUTTON_TEXT").
                    setFeedbackDialogDismissible(false);
              }
+             
+# Contributors
+  Dmitriy Mishin (https://github.com/mishindmitriy)
 
 Kindly contribute the library to include
 1) Custom styles. Or Picking up application's app icon and accent colors.
