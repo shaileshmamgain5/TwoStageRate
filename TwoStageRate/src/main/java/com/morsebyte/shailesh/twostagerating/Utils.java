@@ -74,10 +74,14 @@ public class Utils {
 
 
     public static int getIntSystemValue(String key, Context p_context) {
+        return getIntSystemValue(key, p_context, 0);
+    }
+
+    public static int getIntSystemValue(String key, Context p_context, int defaultValue) {
         int value = -1;
         SharedPreferences myPrefs = p_context
                 .getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        value = myPrefs.getInt(key, 0);
+        value = myPrefs.getInt(key, defaultValue);
 
         return value;
     }

@@ -64,11 +64,11 @@ public class MainActivity extends AppCompatActivity {
     private void initTwoStage() {
         TwoStageRate twoStageRate = TwoStageRate.with(this);
 
-        twoStageRate.setInstallDays(5).setEventsTimes(5).setLaunchTimes(5);
+        twoStageRate.setInstallDays(5).setEventsTimes(3).setLaunchTimes(5);
 
         twoStageRate.resetOnDismiss(true);
 
-        twoStageRate.setShowAppIcon(false);
+        twoStageRate.setShowAppIcon(true);
 
         twoStageRate.showIfMeetsConditions();
 

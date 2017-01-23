@@ -28,16 +28,21 @@ public class TwoStageRate {
     private static final String INSTALL_DATE = "TWOSTAGEINSTALLDATE";
     private static final String EVENT_COUNT = "TWOSTAGEEVENTCOUNT";
     private static final String STOP_TRACK = "TWOSTAGESTOPTRACK";
-    private static final String SHARED_PREFERENCES_SHOW_ICON_KEY = "TwoStageRateShowAppIcon";
     private static TwoStageRate singleton;
     public AppRateDataModel appRateData = new AppRateDataModel();
     public RatePromptDialog ratePromptDialog = new RatePromptDialog();
     public FeedbackDialog feedbackDialog = new FeedbackDialog();
     public ConfirmRateDialog confirmRateDialog = new ConfirmRateDialog();
-    public Settings settings = new Settings();
+    public static Settings settings = new Settings();
     boolean isDebug = false;
     boolean shouldResetOnDismiss = true;
     private Context mContext;
+
+
+    private static final String SHARED_PREFERENCES_SHOW_ICON_KEY = "TwoStageRateShowAppIcon";
+    private static final String SHARED_PREFERENCES_TOTAL_LAUNCH_TIMES = "TwoStageRateTotalLaunchTimes";
+    private static final String SHARED_PREFERENCES_TOTAL_EVENTS_COUNT = "TwoStageRateTotalEventCount";
+    private static final String SHARED_PREFERENCES_TOTAL_INSTALL_DAYS = "TwoStageRateTotalInstallDays";
     /**
      * same for feedback dialog
      */
@@ -52,7 +57,19 @@ public class TwoStageRate {
     }
 
     public static TwoStageRate with(Context context) {
+        setUpSettingsIfNotExists(context);
         return new TwoStageRate(context);
+    }
+
+    /**
+     * Sets up setting items if they are in preferences. Else it just sets the default values
+     */
+    private static void setUpSettingsIfNotExists(Context context) {
+
+        settings.setEventsTimes(Utils.getIntSystemValue(SHARED_PREFERENCES_TOTAL_EVENTS_COUNT, context, 10));
+        settings.setInstallDays(Utils.getIntSystemValue(SHARED_PREFERENCES_TOTAL_INSTALL_DAYS, context, 5));
+        settings.setLaunchTimes(Utils.getIntSystemValue(SHARED_PREFERENCES_TOTAL_LAUNCH_TIMES, context, 5));
+
     }
 
     public TwoStageRate setFeedbackWithRatingReceivedListener(FeedbackWithRatingReceivedListener feedbackWithRatingReceivedListener) {
@@ -83,7 +100,7 @@ public class TwoStageRate {
 
     }
 
-    public void setShowAppIcon (boolean showAppIcon) {
+    public void setShowAppIcon(boolean showAppIcon) {
         Utils.setBooleanSystemValue(SHARED_PREFERENCES_SHOW_ICON_KEY, showAppIcon, mContext);
     }
 
@@ -440,16 +457,19 @@ public class TwoStageRate {
      */
 
     public TwoStageRate setInstallDays(int installDays) {
+        Utils.setIntSystemValue(SHARED_PREFERENCES_TOTAL_INSTALL_DAYS, installDays, mContext);
         this.settings.installDays = installDays;
         return this;
     }
 
     public TwoStageRate setLaunchTimes(int launchTimes) {
+        Utils.setIntSystemValue(SHARED_PREFERENCES_TOTAL_LAUNCH_TIMES, launchTimes, mContext);
         this.settings.launchTimes = launchTimes;
         return this;
     }
 
     public TwoStageRate setEventsTimes(int eventsTimes) {
+        Utils.setIntSystemValue(SHARED_PREFERENCES_TOTAL_EVENTS_COUNT, eventsTimes, mContext);
         this.settings.eventsTimes = eventsTimes;
         return this;
     }

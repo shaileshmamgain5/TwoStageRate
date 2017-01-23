@@ -23,11 +23,13 @@ public class EventActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TwoStageRate.with(EventActivity.this)
-                        .setFeedbackWithRatingReceivedListener(new FeedbackWithRatingReceivedListener() {
+               TwoStageRate t =  TwoStageRate.with(EventActivity.this);
+
+                        t.setFeedbackWithRatingReceivedListener(new FeedbackWithRatingReceivedListener() {
                             @Override
                             public void onFeedbackReceived(float rating, String feedback) {
                                 Toast.makeText(EventActivity.this, String.format("Rating: %f. %s", rating, feedback), Toast.LENGTH_SHORT).show();
+
                             }
                         }).incrementEvent();
             }
