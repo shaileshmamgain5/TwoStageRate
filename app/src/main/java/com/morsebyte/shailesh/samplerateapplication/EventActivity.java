@@ -2,11 +2,12 @@ package com.morsebyte.shailesh.samplerateapplication;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
+import com.morsebyte.shailesh.twostagerating.FeedbackWithRatingReceivedListener;
 import com.morsebyte.shailesh.twostagerating.TwoStageRate;
 
 public class EventActivity extends AppCompatActivity {
@@ -22,7 +23,13 @@ public class EventActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TwoStageRate.with(EventActivity.this).incrementEvent();
+                TwoStageRate.with(EventActivity.this)
+                        .setFeedbackWithRatingReceivedListener(new FeedbackWithRatingReceivedListener() {
+                            @Override
+                            public void onFeedbackReceived(float rating, String feedback) {
+                                Toast.makeText(EventActivity.this, String.format("Rating: %f. %s", rating, feedback), Toast.LENGTH_SHORT).show();
+                            }
+                        }).incrementEvent();
             }
         });
     }

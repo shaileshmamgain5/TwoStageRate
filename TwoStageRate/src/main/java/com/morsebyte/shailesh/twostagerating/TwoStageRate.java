@@ -15,7 +15,6 @@ import com.morsebyte.shailesh.twostagerating.dialog.ConfirmRateDialog;
 import com.morsebyte.shailesh.twostagerating.dialog.FeedbackDialog;
 import com.morsebyte.shailesh.twostagerating.dialog.RatePromptDialog;
 
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -27,60 +26,55 @@ public class TwoStageRate {
     private static final String INSTALL_DAYS = "TWOSTAGEINSTALLDAYS";
     private static final String INSTALL_DATE = "TWOSTAGEINSTALLDATE";
     private static final String EVENT_COUNT = "TWOSTAGEEVENTCOUNT";
-    private static final String STOP_TRACK  = "TWOSTAGESTOPTRACK";
-
-    boolean isDebug = false;
-    boolean shouldResetOnDismiss = true;
-
-
+    private static final String STOP_TRACK = "TWOSTAGESTOPTRACK";
+    private static TwoStageRate singleton;
     public AppRateDataModel appRateData = new AppRateDataModel();
     public RatePromptDialog ratePromptDialog = new RatePromptDialog();
     public FeedbackDialog feedbackDialog = new FeedbackDialog();
     public ConfirmRateDialog confirmRateDialog = new ConfirmRateDialog();
     public Settings settings = new Settings();
+    boolean isDebug = false;
+    boolean shouldResetOnDismiss = true;
+    private Context mContext;
+    /**
+     * same for feedback dialog
+     */
 
-
-    private Date installDate = new Date();
-
-
-    private static Context mContext;
-
-    private static TwoStageRate singleton;
-
+    //for callback
+    private FeedbackReceivedListener feedbackReceivedListener;
+    private DialogDismissedListener dialogDismissedListener;
+    private FeedbackWithRatingReceivedListener feedbackWithRatingReceivedListener;
 
     private TwoStageRate(Context context) {
         this.mContext = context;
     }
 
     public static TwoStageRate with(Context context) {
-        if (singleton == null) {
-            synchronized (TwoStageRate.class) {
-                if (singleton == null) {
-                    singleton = new TwoStageRate(context);
-                }
-            }
-        }
-        mContext = context;
-        return singleton;
+        return new TwoStageRate(context);
+    }
+
+    public TwoStageRate setFeedbackWithRatingReceivedListener(FeedbackWithRatingReceivedListener feedbackWithRatingReceivedListener) {
+        this.feedbackWithRatingReceivedListener = feedbackWithRatingReceivedListener;
+        return this;
     }
 
     /**
      * Checks if the conditions are met (anu one ) and shows prompt if yes.
      * But before it checks whether it has already shown the prompt and user has responded
-     *
+     * <p>
      * Also it always shows up in Debug mode
      */
     public void showIfMeetsConditions() {
 
-        if(!Utils.getBooleanSystemValue(STOP_TRACK,mContext)){
-        if (checkIfMeetsCondition() || isDebug) {
-            showRatePromptDialog();
-            Utils.setBooleanSystemValue(STOP_TRACK, true, mContext);
+        if (!Utils.getBooleanSystemValue(STOP_TRACK, mContext)) {
+            if (checkIfMeetsCondition() || isDebug) {
+                showRatePromptDialog();
+                Utils.setBooleanSystemValue(STOP_TRACK, true, mContext);
 
-        } else {
-            track();
+            } else {
+                track();
+            }
         }
-    }
     }
 
     private void track() {
@@ -89,7 +83,7 @@ public class TwoStageRate {
 
     private boolean checkIfMeetsCondition() {
         return isOverLaunchTimes() ||
-        isOverInstallDays() || isOverEventCounts();
+                isOverInstallDays() || isOverEventCounts();
 
     }
 
@@ -113,7 +107,7 @@ public class TwoStageRate {
 
     private boolean isOverLaunchTimes() {
         int launches = Utils.getIntSystemValue(LAUNCH_COUNT, mContext);
-        if ( launches>= settings.getLaunchTimes()) {
+        if (launches >= settings.getLaunchTimes()) {
             return true;
         } else {
             int count = Utils.getIntSystemValue(LAUNCH_COUNT, mContext) + 1;
@@ -149,8 +143,8 @@ public class TwoStageRate {
     }
 
     public void incrementEvent() {
-        int eventCount = Utils.getIntSystemValue(EVENT_COUNT, mContext) +1;
-        Utils.setIntSystemValue(EVENT_COUNT,eventCount,mContext);
+        int eventCount = Utils.getIntSystemValue(EVENT_COUNT, mContext) + 1;
+        Utils.setIntSystemValue(EVENT_COUNT, eventCount, mContext);
         showIfMeetsConditions();
     }
 
@@ -189,17 +183,26 @@ public class TwoStageRate {
 
         rbRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+            public void onRatingChanged(RatingBar ratingBar, final float rating, boolean fromUser) {
                 if (rating > threshold) {
                     ConfirmRateDialog cr = new ConfirmRateDialog();
                     Dialog dialog1 = getConfirmRateDialog(context, confirmRateDialog);
                     if (dialog1 != null) {
                         dialog1.show();
                     }
-
                 } else {
                     FeedbackDialog fd = new FeedbackDialog();
-                    Dialog dialog1 = getFeedbackDialog(context, feedbackDialog);
+                    Dialog dialog1 = getFeedbackDialog(context, feedbackDialog, new FeedbackReceivedListener() {
+                        @Override
+                        public void onFeedbackReceived(String feedback) {
+                            if (feedbackReceivedListener != null) {
+                                feedbackReceivedListener.onFeedbackReceived(feedback);
+                            }
+                            if (feedbackWithRatingReceivedListener != null) {
+                                feedbackWithRatingReceivedListener.onFeedbackReceived(rating, feedback);
+                            }
+                        }
+                    });
                     if (dialog1 != null) {
                         dialog1.show();
                     }
@@ -262,12 +265,10 @@ public class TwoStageRate {
         });
 
 
-
         return dialog;
     }
 
-
-    public Dialog getFeedbackDialog(final Context context, final FeedbackDialog feedbackDialog) {
+    public Dialog getFeedbackDialog(final Context context, final FeedbackDialog feedbackDialog, final FeedbackReceivedListener feedbackReceivedListener) {
         // custom dialog
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -298,7 +299,9 @@ public class TwoStageRate {
                 if (etFeedback.getText() != null && etFeedback.getText().length() > 0) {
                     //// TODO: 2/8/16 : Write a callback with the text in it
                     dialog.dismiss();
-                    onFeedbackReceived(etFeedback.getText().toString());
+                    if (feedbackReceivedListener != null) {
+                        feedbackReceivedListener.onFeedbackReceived(etFeedback.getText().toString());
+                    }
                 } else {
                     Toast.makeText(context, "Bro.. Write Something", Toast.LENGTH_LONG).show();
                 }
@@ -318,90 +321,70 @@ public class TwoStageRate {
 
     /**
      * Setter and getters for rate prompt dialog
+     *
      * @param ratePromptTitle
      */
 
-    public TwoStageRate setRatePromptTitle(String ratePromptTitle)
-    {
-        this.ratePromptDialog.ratePromptTitle =ratePromptTitle;
-        return this;
-    }
-    public TwoStageRate setRatePromptLaterText(String ratePromptLaterText)
-    {
-        this.ratePromptDialog.ratePromptLaterText =ratePromptLaterText;
-        return this;
-    }
-    public TwoStageRate setRatePromptNeverText(String ratePromptNeverText)
-    {
-        this.ratePromptDialog.ratePromptNeverText =ratePromptNeverText;
+    public TwoStageRate setRatePromptTitle(String ratePromptTitle) {
+        this.ratePromptDialog.ratePromptTitle = ratePromptTitle;
         return this;
     }
 
-    public TwoStageRate setRatePromptDismissible(boolean dismissible)
-    {
+    public TwoStageRate setRatePromptLaterText(String ratePromptLaterText) {
+        this.ratePromptDialog.ratePromptLaterText = ratePromptLaterText;
+        return this;
+    }
+
+    public TwoStageRate setRatePromptNeverText(String ratePromptNeverText) {
+        this.ratePromptDialog.ratePromptNeverText = ratePromptNeverText;
+        return this;
+    }
+
+    public TwoStageRate setRatePromptDismissible(boolean dismissible) {
         this.ratePromptDialog.dismissible = dismissible;
         return this;
     }
 
-    /**same for feedback dialog
-     *
-     */
-
-    //for callback
-    private FeedbackReceivedListener feedbackReceivedListener;
-    private DialogDismissedListener dialogDismissedListener;
-
-    public TwoStageRate setFeedbackDialogTitle(String feedbackPromptTitle)
-    {
-        this.feedbackDialog.feedbackPromptTitle =feedbackPromptTitle;
+    public TwoStageRate setFeedbackDialogTitle(String feedbackPromptTitle) {
+        this.feedbackDialog.feedbackPromptTitle = feedbackPromptTitle;
         return this;
     }
 
-    public TwoStageRate setFeedbackDialogDescription(String feedbackPromptText)
-    {
-        this.feedbackDialog.feedbackPromptText =feedbackPromptText;
+    public TwoStageRate setFeedbackDialogDescription(String feedbackPromptText) {
+        this.feedbackDialog.feedbackPromptText = feedbackPromptText;
         return this;
     }
 
-    public TwoStageRate setFeedbackDialogPositiveText(String feedbackPromptPositiveText)
-    {
-        this.feedbackDialog.feedbackPromptPositiveText =feedbackPromptPositiveText;
+    public TwoStageRate setFeedbackDialogPositiveText(String feedbackPromptPositiveText) {
+        this.feedbackDialog.feedbackPromptPositiveText = feedbackPromptPositiveText;
         return this;
     }
 
 
-    public TwoStageRate setFeedbackDialogNegativeText(String feedbackPromptNegativeText)
-    {
-        this.feedbackDialog.feedbackPromptNegativeText =feedbackPromptNegativeText;
+    public TwoStageRate setFeedbackDialogNegativeText(String feedbackPromptNegativeText) {
+        this.feedbackDialog.feedbackPromptNegativeText = feedbackPromptNegativeText;
         return this;
     }
-    public TwoStageRate setFeedbackDialogDismissible(boolean dismissible)
-    {
+
+    public TwoStageRate setFeedbackDialogDismissible(boolean dismissible) {
         this.feedbackDialog.dismissible = dismissible;
         return this;
     }
 
-    public TwoStageRate setFeedbackReceivedListener(FeedbackReceivedListener feedbackReceivedListener)
-    {
-        this.feedbackReceivedListener= feedbackReceivedListener;
+    public TwoStageRate setFeedbackReceivedListener(FeedbackReceivedListener feedbackReceivedListener) {
+        this.feedbackReceivedListener = feedbackReceivedListener;
         return this;
     }
 
-    public void onFeedbackReceived(String s)
-    {
-        feedbackReceivedListener.onFeedbackReceived(s);
-    }
-
-    public TwoStageRate setOnDialogDismissedListener(DialogDismissedListener dialogDismissedListener)
-    {
-        this.dialogDismissedListener= dialogDismissedListener;
+    public TwoStageRate setOnDialogDismissedListener(DialogDismissedListener dialogDismissedListener) {
+        this.dialogDismissedListener = dialogDismissedListener;
         return this;
     }
 
-    public void onDialogDismissed()
-    {
-        if(shouldResetOnDismiss){
-        resetTwoStage();}
+    public void onDialogDismissed() {
+        if (shouldResetOnDismiss) {
+            resetTwoStage();
+        }
         //dialogDismissedListener.onDialogDismissed();
     }
 
@@ -409,31 +392,28 @@ public class TwoStageRate {
      *All setters for ConfirmRateDialog
      */
 
-    public TwoStageRate setConfirmRateDialogTitle(String confirmRateTitle)
-    {
-        this.confirmRateDialog.confirmRateTitle =confirmRateTitle;
+    public TwoStageRate setConfirmRateDialogTitle(String confirmRateTitle) {
+        this.confirmRateDialog.confirmRateTitle = confirmRateTitle;
         return this;
     }
 
 
-    public TwoStageRate setConfirmRateDialogDescription(String confirmRateText)
-    {
-        this.confirmRateDialog.confirmRateText =confirmRateText;
-        return this;
-    }
-    public TwoStageRate setConfirmRateDialogNegativeText(String confirmRateNegativeText)
-    {
-        this.confirmRateDialog.confirmRateNegativeText =confirmRateNegativeText;
-        return this;
-    }
-    public TwoStageRate setConfirmRateDialogPositiveText(String confirmRatePositiveText)
-    {
-        this.confirmRateDialog.confirmRatePositiveText =confirmRatePositiveText;
+    public TwoStageRate setConfirmRateDialogDescription(String confirmRateText) {
+        this.confirmRateDialog.confirmRateText = confirmRateText;
         return this;
     }
 
-    public TwoStageRate setConfirmRateDialogDismissible(boolean dismissible)
-    {
+    public TwoStageRate setConfirmRateDialogNegativeText(String confirmRateNegativeText) {
+        this.confirmRateDialog.confirmRateNegativeText = confirmRateNegativeText;
+        return this;
+    }
+
+    public TwoStageRate setConfirmRateDialogPositiveText(String confirmRatePositiveText) {
+        this.confirmRateDialog.confirmRatePositiveText = confirmRatePositiveText;
+        return this;
+    }
+
+    public TwoStageRate setConfirmRateDialogDismissible(boolean dismissible) {
         this.confirmRateDialog.dismissible = dismissible;
         return this;
     }
@@ -442,44 +422,36 @@ public class TwoStageRate {
      * Setters for Settings
      */
 
-    public TwoStageRate setInstallDays( int installDays)
-    {
+    public TwoStageRate setInstallDays(int installDays) {
         this.settings.installDays = installDays;
         return this;
     }
-    public TwoStageRate setLaunchTimes( int launchTimes)
-    {
+
+    public TwoStageRate setLaunchTimes(int launchTimes) {
         this.settings.launchTimes = launchTimes;
         return this;
     }
 
-    public TwoStageRate setEventsTimes( int eventsTimes)
-    {
+    public TwoStageRate setEventsTimes(int eventsTimes) {
         this.settings.eventsTimes = eventsTimes;
         return this;
     }
 
 
-    public TwoStageRate setThresholdRating( float thresholdRating)
-    {
+    public TwoStageRate setThresholdRating(float thresholdRating) {
         this.settings.thresholdRating = thresholdRating;
         return this;
     }
 
-    public TwoStageRate setStoreType(Settings.StoreType storeType)
-    {
-        this.settings.storeType =storeType;
+    public TwoStageRate setStoreType(Settings.StoreType storeType) {
+        this.settings.storeType = storeType;
         return this;
     }
 
-    public TwoStageRate resetOnDismiss(boolean shouldReset)
-    {
+    public TwoStageRate resetOnDismiss(boolean shouldReset) {
         this.shouldResetOnDismiss = shouldReset;
         return this;
     }
-
-
-
 
 
 }

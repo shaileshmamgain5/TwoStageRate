@@ -16,6 +16,12 @@ import com.morsebyte.shailesh.twostagerating.TwoStageRate;
 public class MainActivity extends AppCompatActivity {
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        TwoStageRate.with(MainActivity.this).showIfMeetsConditions();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -27,21 +33,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //TwoStageRate.with(MainActivity.this).showRatePromptDialog();
-                TwoStageRate.with(MainActivity.this).incrementEvent();
-                TwoStageRate.with(MainActivity.this).incrementEvent();
                 startActivity(new Intent(MainActivity.this, EventActivity.class));
-
-
-            }
-        });
-
-        TwoStageRate  twoStageRate =  TwoStageRate.with(MainActivity.this);
-        twoStageRate.setFeedbackReceivedListener(new FeedbackReceivedListener() {
-            @Override
-            public void onFeedbackReceived(String feedback) {
-                Toast.makeText(MainActivity.this, feedback, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -98,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         */
 /**
-         * provide custom text on the confirmation dialog*//*
+ * provide custom text on the confirmation dialog*//*
 
 
         twoStageRate.with(this).setConfirmRateDialogTitle("CONFIRMATION_TITLE").setConfirmRateDialogDescription("CONFIRMATION_DESCRITPION").
@@ -106,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         */
 /**
-         * provide custom text on feedback dialog*//*
+ * provide custom text on feedback dialog*//*
 
 
         twoStageRate.with(this).setFeedbackDialogTitle("FEEDBACK_TITLE").setFeedbackDialogDescription("FEEDBACK_DIALOG_DESCRIPTION").
