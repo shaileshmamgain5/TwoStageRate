@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ public class TwoStageRate {
     private static final String INSTALL_DATE = "TWOSTAGEINSTALLDATE";
     private static final String EVENT_COUNT = "TWOSTAGEEVENTCOUNT";
     private static final String STOP_TRACK = "TWOSTAGESTOPTRACK";
+    private static final String SHARED_PREFERENCES_SHOW_ICON_KEY = "TwoStageRateShowAppIcon";
     private static TwoStageRate singleton;
     public AppRateDataModel appRateData = new AppRateDataModel();
     public RatePromptDialog ratePromptDialog = new RatePromptDialog();
@@ -81,6 +83,10 @@ public class TwoStageRate {
 
     }
 
+    public void setShowAppIcon (boolean showAppIcon) {
+        Utils.setBooleanSystemValue(SHARED_PREFERENCES_SHOW_ICON_KEY, showAppIcon, mContext);
+    }
+
     private boolean checkIfMeetsCondition() {
         return isOverLaunchTimes() ||
                 isOverInstallDays() || isOverEventCounts();
@@ -95,6 +101,9 @@ public class TwoStageRate {
 
     }
 
+    /**
+     * Setting install date of app
+     */
     public void setInstallDate() {
 
         if (Utils.getLongSystemValue(INSTALL_DATE, mContext) == 0) {
@@ -180,6 +189,14 @@ public class TwoStageRate {
         TextView title = (TextView) dialog.findViewById(R.id.tvRatePromptTitle);
         title.setText(ratePromptDialog.getTitle());
         RatingBar rbRating = (RatingBar) dialog.findViewById(R.id.rbRatePromptBar);
+        ImageView ivAppIcon = (ImageView) dialog.findViewById(R.id.ivAppIcon);
+
+        if ((Utils.getBooleanSystemValue(SHARED_PREFERENCES_SHOW_ICON_KEY, context, true))) {
+            ivAppIcon.setImageResource(Utils.twoStageGetAppIconResourceId(context));
+            ivAppIcon.setVisibility(View.VISIBLE);
+        } else {
+            ivAppIcon.setVisibility(View.GONE);
+        }
 
         rbRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override

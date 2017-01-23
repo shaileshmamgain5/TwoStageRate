@@ -2,6 +2,8 @@ package com.morsebyte.shailesh.twostagerating;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -88,10 +90,14 @@ public class Utils {
     }
 
     public static boolean getBooleanSystemValue(String key, Context p_context) {
+       return getBooleanSystemValue(key, p_context, false);
+    }
+
+    public static boolean getBooleanSystemValue(String key, Context p_context, boolean defaultValue) {
         boolean value = false;
         SharedPreferences myPrefs = p_context
                 .getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        value = myPrefs.getBoolean(key, false);
+        value = myPrefs.getBoolean(key, defaultValue);
 
         return value;
     }
@@ -126,5 +132,20 @@ public class Utils {
         return daysBetween;
     }
 
-
+    /**
+     * retrieves app icon resource id
+     * **/
+    public static int twoStageGetAppIconResourceId(Context context) {
+        int appIconResId = -1;
+        String packageName = context.getPackageName();
+        final PackageManager pm = context.getPackageManager();
+        final ApplicationInfo applicationInfo;
+        try {
+            applicationInfo = pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+            appIconResId = applicationInfo.icon;
+        } catch (PackageManager.NameNotFoundException e) {
+            //do nothing here
+        }
+        return appIconResId;
+    }
 }
