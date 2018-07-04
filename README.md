@@ -31,7 +31,7 @@ Thats it, you are good to go.
 
 To put it simply, it can be done just in one line of code inside your activity's ' onCreate(...'
 
-         TwoStageRate.with(this).twoStageRate.showIfMeetsConditions();
+         TwoStageRate.with(this).showIfMeetsConditions();
 
 It sets the texts (as in above pics) and conditions (5 days of use or 5 times opening of app or 5 times setting of an custom event) to defaults.
          
